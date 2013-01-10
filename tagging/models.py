@@ -11,6 +11,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import connection, models
 from django.db.models.query import QuerySet
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from tagging import settings
@@ -458,7 +459,7 @@ class Tag(models.Model):
     A tag.
     """
     name = models.CharField(_('name'), max_length=50, unique=True, db_index=True)
-    slug = models.SlugField(_('slug'), max_length=50, unique=True)
+    slug = models.SlugField(_('slug'), max_length=50, unique=True, db_index=True)
 
     objects = TagManager()
 
@@ -469,6 +470,10 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(name)
+        super(Tag, self).save(*args, **kwargs)
 
 class TaggedItem(models.Model):
     """

@@ -1,3 +1,6 @@
+This is a clone of http://code.google.com/p/django-tagging
+with a slug field added to the Tag model and a custom save method to populate this.
+
 ==============
 Django Tagging
 ==============

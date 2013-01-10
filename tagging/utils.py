@@ -200,6 +200,9 @@ def get_tag(tag):
     appropriate ``Tag``.
 
     If no matching tag can be found, ``None`` will be returned.
+
+    Change in this fork: if a string is given, we try matching as a
+    slug first, then name.
     """
     from tagging.models import Tag
     if isinstance(tag, Tag):
@@ -207,7 +210,10 @@ def get_tag(tag):
 
     try:
         if isinstance(tag, types.StringTypes):
-            return Tag.objects.get(name=tag)
+            try:
+                return Tag.objects.get(slug=tag)
+            except Tag.DoesNotExist:
+                return Tag.objects.get(name=tag)
         elif isinstance(tag, (types.IntType, types.LongType)):
             return Tag.objects.get(id=tag)
     except Tag.DoesNotExist:

@@ -8,7 +8,7 @@ from django.db import models
 class Migration(SchemaMigration):
     no_dry_run = True
     def forwards(self, orm):
-        from core.slug_unique import slugify
+        from django.template.defaultfilters import slugify
         for tag in orm.Tag.objects.defer('slug'):
             tag.slug = slugify(tag.name)
             tag.save()

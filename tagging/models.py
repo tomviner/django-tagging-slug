@@ -459,7 +459,7 @@ class Tag(models.Model):
     A tag.
     """
     name = models.CharField(_('name'), max_length=50, unique=True, db_index=True)
-    slug = models.SlugField(_('slug'), max_length=50, unique=True, db_index=True, default='')
+    slug = models.SlugField(_('slug'), max_length=50, default='')
 
     objects = TagManager()
 
@@ -472,7 +472,7 @@ class Tag(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(name)
+        self.slug = slugify(self.name)
         super(Tag, self).save(*args, **kwargs)
 
 class TaggedItem(models.Model):

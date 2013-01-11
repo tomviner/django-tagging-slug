@@ -472,7 +472,16 @@ class Tag(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        other_slugs = self.objects.exclude(pk=self.pk).values_list('slug', flat=True)
+        base_slug = slugify(self.name)
+        if not base_slug:
+            base_slug = 'tag'
+        slug = base_slug
+        i = 0
+        while slug in other_slugs:
+            i += 1
+            slug = '%s-%s' % (base_slug, i)
+        self.slug = slug
         super(Tag, self).save(*args, **kwargs)
 
 class TaggedItem(models.Model):

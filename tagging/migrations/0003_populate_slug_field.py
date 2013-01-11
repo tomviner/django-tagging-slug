@@ -10,7 +10,6 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         from django.template.defaultfilters import slugify
         for tag in orm.Tag.objects.defer('slug'):
-            tag.slug = slugify(tag.name)
             tag.save()
 
     def backwards(self, orm):
